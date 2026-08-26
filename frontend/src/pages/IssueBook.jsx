@@ -30,7 +30,7 @@ const IssueBook = () => {
     setStudentLoading(true);
 
     try {
-      const res = await axios.get(`http://localhost:8000/api/students/by-id/?student_id=${studentId}`);
+      const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/students/by-id/?student_id=${studentId}`);
       setStudent(res.data.student);
     } catch (error) {
       toast.error("Student not found.");
@@ -48,7 +48,7 @@ const IssueBook = () => {
     setBookLoading(true);
 
     try {
-      const res = await axios.get(`http://localhost:8000/api/books/lookup/?q=${bookQuery}`);
+      const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/books/lookup/?q=${bookQuery}`);
       setBook(res.data.book);
     } catch (error) {
       toast.error("Book not found.");
@@ -72,7 +72,7 @@ const IssueBook = () => {
     setIssuing(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/issue_book/", {
+      const res = await axios.post("https://library-management-system-efu0.onrender.com/api/issue_book/", {
         student_id: student.student_id,
         book_id: book.id,
         remark: remark
@@ -92,7 +92,7 @@ const IssueBook = () => {
   };
 
   const getBookCoverUrl = book && book.cover_image ? 
-    (book.cover_image.startsWith("http://") ? book.cover_image : `http://localhost:8000${book.cover_image}`)
+    (book.cover_image.startsWith("http://") ? book.cover_image : `https://library-management-system-efu0.onrender.com${book.cover_image}`)
     : null;
 
 

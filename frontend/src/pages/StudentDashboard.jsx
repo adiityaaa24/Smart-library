@@ -26,7 +26,7 @@ const StudentDashboard = () => {
         const fetchStats = async () => {
             setLoading(true);     //api call start hone wala h
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/user_stats/", {params: {student_id: studentUser.student_id}});
+                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user_stats/", {params: {student_id: studentUser.student_id}});
                 //https://1227.0.0.1:8000/api/user_stats/?student_id=1
                 setStats(res.data.stats);
             } catch (err) {

@@ -25,7 +25,7 @@ const ManageAuthors = () => {
     const fetchAuthors = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/authors/"); 
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/authors/"); 
         setAuthors(res.data);
       }
       catch(err){
@@ -52,7 +52,7 @@ const ManageAuthors = () => {
       setSaving(true);
 
       try{
-        const res = await axios.put(`http://127.0.0.1:8000/api/update_author/${editId}/`, 
+        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_author/${editId}/`, 
           {name:editName }
         );
         if (res.data.success) {
@@ -85,7 +85,7 @@ const ManageAuthors = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`http://127.0.0.1:8000/api/delete_author/${id}/`);
+        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_author/${id}/`);
           
        
         if (res.data.success) {

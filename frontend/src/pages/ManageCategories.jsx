@@ -25,7 +25,7 @@ const ManageCategories = () => {
     const fetchCategories = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/categories/"); 
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/categories/"); 
         setCategories(res.data);
       }
       catch(err){
@@ -54,7 +54,7 @@ const ManageCategories = () => {
       setSaving(true);
 
       try{
-        const res = await axios.put(`http://127.0.0.1:8000/api/update_category/${editId}/`, 
+        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_category/${editId}/`, 
           {name:editName, status:editStatus }
         );
         if (res.data.success) {
@@ -87,7 +87,7 @@ const ManageCategories = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`http://127.0.0.1:8000/api/delete_category/${id}/`);
+        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_category/${id}/`);
           
        
         if (res.data.success) {

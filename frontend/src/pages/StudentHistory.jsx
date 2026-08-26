@@ -25,7 +25,7 @@ const StudentHistory = () => {
     const fetchHistory = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/api/admin/student_history/${studentId}/`);
+        const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/admin/student_history/${studentId}/`);
         setStudent(res.data.student);
         setIssues(res.data.issues);
       }

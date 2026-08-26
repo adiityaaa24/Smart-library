@@ -23,7 +23,7 @@ const ManageStudents = () => {
     const fetchStudents = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/admin/students/");
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/admin/students/");
         setStudents(res.data);
       }
       catch(err){
@@ -38,7 +38,7 @@ const ManageStudents = () => {
 
     const handleToggleStatus = async (student) => {
       const isCurrentlyActive = student.is_active;
-      const url = isCurrentlyActive ? `http://127.0.0.1:8000/api/admin/block_student/${student.id}/` : `http://127.0.0.1:8000/api/admin/activate_student/${student.id}/`;
+      const url = isCurrentlyActive ? `https://library-management-system-efu0.onrender.com/api/admin/block_student/${student.id}/` : `https://library-management-system-efu0.onrender.com/api/admin/activate_student/${student.id}/`;
 
       const confirmMessage = isCurrentlyActive ? `Are you sure you want to block ${student.full_name}?` : `Are you sure you want to activate ${student.full_name}?`;
 

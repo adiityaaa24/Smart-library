@@ -28,7 +28,7 @@ const StudentProfile = () => {
         const fetchProfile = async () => {
             setLoading(true);     //api call start hone wala h
             try {
-                const res = await axios.get('http://127.0.0.1:8000/api/user/profile/', {
+                const res = await axios.get('https://library-management-system-efu0.onrender.com/api/user/profile/', {
                   params: {student_id: studentUser.student_id}
                   //https://127.0.0.1:8000/api/user/profile/?student_id=1001
                 });
@@ -61,7 +61,7 @@ const StudentProfile = () => {
       e.preventDefault();
       try {
         setSaving(true);
-        const res = await axios.put('http://127.0.0.1:8000/api/user/profile/', {
+        const res = await axios.put('https://library-management-system-efu0.onrender.com/api/user/profile/', {
           student_id: profile.student_id,
           
           //student_id: studentUser.student_id, // Use the student_id from localStorage

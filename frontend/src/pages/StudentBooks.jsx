@@ -24,7 +24,7 @@ const StudentBooks = () => {
         const fetchBooks = async () => {
             setLoading(true);     //api call start hone wala h
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/user/books/");
+                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user/books/");
                 setBooks(res.data.books);
                 setFiltered(res.data.books);
             } catch (err) {
@@ -62,7 +62,7 @@ const StudentBooks = () => {
       if(book.cover_image.startsWith("http://")){
         return book.cover_image;
       }
-      return `http://127.0.0.1:8000${book.cover_image}`;
+      return `https://library-management-system-efu0.onrender.com${book.cover_image}`;
   }
 
   return (
@@ -120,7 +120,7 @@ const StudentBooks = () => {
                 <div className='card border-0 shadow-sm h-100 rounded-4'>
 
                   <div className="bg-light d-flex align-items-center justify-content-center" style={{height: "200px"}}>
-                    {/* <img src={`http://127.0.0.1:8000${book.cover_image}`} alt={book.title} className="img-fluid" style={{maxHeight: "180px", objectFit: "contain"}} /> */}
+                    {/* <img src={`https://library-management-system-efu0.onrender.com${book.cover_image}`} alt={book.title} className="img-fluid" style={{maxHeight: "180px", objectFit: "contain"}} /> */}
                     {getCoverUrl(book) ? (
                       <img src={getCoverUrl(book)} alt={book.title} className="img-fluid" style={{maxHeight: "180px", objectFit: "contain"}} />
                     ) : (

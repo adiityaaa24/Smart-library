@@ -36,9 +36,9 @@ const ManageBooks = () => {
       setLoadingList(true);
       try {
         const [booksRes, categoriesRes, authorsRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/api/books/"),
-          axios.get("http://127.0.0.1:8000/api/categories/"),
-          axios.get("http://127.0.0.1:8000/api/authors/")
+          axios.get("https://library-management-system-efu0.onrender.com/api/books/"),
+          axios.get("https://library-management-system-efu0.onrender.com/api/categories/"),
+          axios.get("https://library-management-system-efu0.onrender.com/api/authors/")
         ]);
         setBooks(booksRes.data);
         setCategories(categoriesRes.data);
@@ -60,7 +60,7 @@ const ManageBooks = () => {
       setEditAuthor(book.author);
       setEditPrice(book.price);
       setEditQuantity(book.quantity);
-      setEditImagePreview(`http://127.0.0.1:8000${book.cover_image}`);
+      setEditImagePreview(`https://library-management-system-efu0.onrender.com${book.cover_image}`);
       setEditImageFile(null);
     }
 
@@ -98,7 +98,7 @@ const ManageBooks = () => {
           formData.append("cover_image", editImageFile);
         }
         
-        const res = await axios.put(`http://127.0.0.1:8000/api/update_book/${editId}/`, 
+        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_book/${editId}/`, 
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }
@@ -134,7 +134,7 @@ const ManageBooks = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`http://127.0.0.1:8000/api/delete_book/${id}/`);
+        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_book/${id}/`);
           
        
         if (res.data.success) {
@@ -338,7 +338,7 @@ const ManageBooks = () => {
                               <td>{index+1}</td>
                               <td style={{maxWidth:"200px"}}>
                                 
-                                <img src={`http://127.0.0.1:8000${book.cover_image}`} alt={book.title} className='img-fluid rounded' style={{maxHeight: "100px", height: "70px", marginBottom: "4px"}}/>
+                                <img src={`https://library-management-system-efu0.onrender.com${book.cover_image}`} alt={book.title} className='img-fluid rounded' style={{maxHeight: "100px", height: "70px", marginBottom: "4px"}}/>
 
                                 <div className='fw-bold small'>{book.title}</div>
 

@@ -16,7 +16,7 @@ const AdminLogin = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("http://127.0.0.1:8000/api/admin/login/", 
+        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/admin/login/", 
           {username, password}
         );
         if (res.status === 200) {

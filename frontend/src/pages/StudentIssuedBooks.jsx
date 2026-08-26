@@ -19,7 +19,7 @@ const StudentIssuedBooks = () => {
         const fetchIssuedBooks = async () => {
             setLoading(true);     //api call start hone wala h
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/user_issued_books/", {params: {student_id: studentUser.student_id}});
+                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user_issued_books/", {params: {student_id: studentUser.student_id}});
                 //https://1227.0.0.1:8000/api/user_issued_books/?student_id=1
                 setIssuedBooks(res.data);
             } catch (err) {

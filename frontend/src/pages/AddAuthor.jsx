@@ -21,7 +21,7 @@ const AddAuthor = () => {
 
     const fetchAuthors = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/authors/"); 
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/authors/"); 
         setAuthors(res.data);
       }
       catch(err){
@@ -36,7 +36,7 @@ const AddAuthor = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("http://127.0.0.1:8000/api/authors/add/", 
+        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/authors/add/", 
           { name }
         ); 
         if (res.data.success) {

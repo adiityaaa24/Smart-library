@@ -25,7 +25,7 @@ const IssuedBookDetails = () => {
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/api/issued_books/${id}/`);
+        const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/issued_books/${id}/`);
         setIssue(res.data);
         if(res.data.fine){
           setFine(res.data.fine);
@@ -55,7 +55,7 @@ const IssuedBookDetails = () => {
 
       setReturning(true);
       try {
-        const res = await axios.post(`http://127.0.0.1:8000/api/return_book/${id}/`, {fine: fine});
+        const res = await axios.post(`https://library-management-system-efu0.onrender.com/api/return_book/${id}/`, {fine: fine});
         toast.success("Book returned successfully");
         //navigate("/admin/manage_issued_books");
         fetchDetails(); // Refresh the details after returning the book
@@ -70,7 +70,7 @@ const IssuedBookDetails = () => {
     }
 
     const bookCoverUrl = issue && issue.book_cover ? 
-    (issue.book_cover.startsWith("http://") ? issue.book_cover : `http://localhost:8000${issue.book_cover}`)
+    (issue.book_cover.startsWith("http://") ? issue.book_cover : `https://library-management-system-efu0.onrender.com${issue.book_cover}`)
     : null;
 
 

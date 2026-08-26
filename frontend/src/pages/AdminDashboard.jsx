@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     setLoading(true);
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/admin/stats/");
+        const response = await axios.get("https://library-management-system-efu0.onrender.com/api/admin/stats/");
         setStats(response.data);
       } catch (error) {
         toast.error("Failed to fetch dashboard stats");

@@ -22,7 +22,7 @@ const AddCategory = () => {
 
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/categories/"); 
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/categories/"); 
         setCategories(res.data);
       }
       catch(err){
@@ -37,7 +37,7 @@ const AddCategory = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("http://127.0.0.1:8000/api/categories/add/", 
+        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/categories/add/", 
           {name, status }
         );
         if (res.data.success) {

@@ -41,7 +41,7 @@ const AdminChangePassword = () => {
       setLoading(true);       //set loading state to true to indicate that the form submission is in progress
 
       try{
-        const res = await axios.post("http://127.0.0.1:8000/api/change_admin_password/", 
+        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/change_admin_password/", 
           { username: adminUser, current_password: currentPassword, new_password: newPassword, confirm_password: confirmPassword }
         ); 
         if (res.data.success) {

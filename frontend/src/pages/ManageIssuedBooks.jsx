@@ -23,7 +23,7 @@ const ManageIssuedBooks = () => {
     const fetchIssues = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/admin/issued_books/");
+        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/admin/issued_books/");
         setIssues(res.data);
       }
       catch(err){
