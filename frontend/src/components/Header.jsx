@@ -1,0 +1,197 @@
+import React from 'react'
+import { Link , useNavigate, useLocation } from "react-router-dom";
+
+const Header = () => {
+  const location = useLocation()
+  const adminUser = localStorage.getItem("adminUser");
+  const studentUser = localStorage.getItem("studentUser");
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    localStorage.removeItem("adminUser");
+    navigate("/admin/login")
+  }
+
+  const handleStudentLogout = () => {
+    localStorage.removeItem("studentUser");
+    navigate("/user/login");
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path ? "active text-primary fw-semibold" : "";
+  }
+  return (
+    <nav className="navbar navbar-expand-lg bg-white border-bottom shadow-sm sticky-top">
+  <div className="container-fluid">
+    <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+      <span className="rounded-circle d-inline-flex align-items-center justify-content-center"
+      style={{background:"#4f46e5" , color:"white", width:"36px", height:"36px"}} >
+        <i className="fa-solid fa-book-open-reader"></i>
+      </span>
+      <span className="fw-bold">Smart Library</span>
+    </Link>
+    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <span className="navbar-toggler-icon"></span>
+    </button>
+    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+
+        {!adminUser && !studentUser && (
+          <>
+        <li className="nav-item">
+          <Link className={`nav-link ${isActive("/")}`} to="/">
+            <i className="fa-solid fa-home me-1"></i>Home</Link>
+        </li>
+        <li className="nav-item">
+          <Link className={`nav-link ${isActive("/user/login")}`} to="/user/login">
+            <i className="fa-solid fa-user me-1"></i>User Login</Link>
+        </li>
+        <li className="nav-item">
+          <Link className={`nav-link ${isActive("/user/signup")}`} to="/user/signup">
+            <i className="fa-solid fa-user-plus me-1"></i>User Signup</Link>
+        </li>
+        <li className="nav-item">
+          <Link className="btn btn-primary" to="/admin/login">
+            <i className="fa-solid fa-shield-halved me-1"></i>Admin Login</Link>
+        </li>
+          </>
+        )}
+
+        {adminUser && (
+          <>
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/admin/dashboard")}`} to="/admin/dashboard">
+                <i className="fa-solid fa-gauge-high me-1"></i>Dashboard</Link>
+            </li>
+
+            <li className="nav-item dropdown">
+             <button className='nav-link dropdown-toggle btn btn-link' data-bs-toggle="dropdown">
+              <i className="fa-solid fa-layer-group me-1"></i>Categories
+             </button>
+                <ul className='dropdown-menu dropdown-menu-end'>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/category_add">
+                      <i className="fa-solid fa-plus me-1"></i>Add Category</Link>
+                  </li>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/category_manage">
+                      <i className="fa-solid fa-list me-1"></i>Manage Category</Link>
+                  </li>
+
+                </ul>
+            </li>
+
+            <li className="nav-item dropdown">
+             <button className='nav-link dropdown-toggle btn btn-link' data-bs-toggle="dropdown">
+              <i className="fa-solid fa-user-pen me-1"></i>Authors
+             </button>
+                <ul className='dropdown-menu dropdown-menu-end'>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/author_add">
+                      <i className="fa-solid fa-plus me-1"></i>Add Author</Link>
+                  </li>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/author_manage">
+                      <i className="fa-solid fa-list me-1"></i>Manage Author</Link>
+                  </li>
+
+                </ul>
+            </li>
+
+            <li className="nav-item dropdown">
+             <button className='nav-link dropdown-toggle btn btn-link' data-bs-toggle="dropdown">
+              <i className="fa-solid fa-book me-1"></i>Books
+             </button>
+                <ul className='dropdown-menu dropdown-menu-end'>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/book_add">
+                      <i className="fa-solid fa-plus me-1"></i>Add Books</Link>
+                  </li>
+                  <li>
+                      <Link className='dropdown-item' to="/admin/book_manage">
+                      <i className="fa-solid fa-list me-1"></i>Manage Books</Link>
+                  </li>
+
+                  <li>
+                      <Link className='dropdown-item' to="/admin/manage_issued_books">
+                      <i className="fa-solid fa-arrow-right-arrow-left me-1"></i>Issued Books</Link>
+                  </li>
+
+                </ul>
+            </li>
+
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/admin/issue_book")}`} to="/admin/issue_book">
+                <i className="fa-solid fa-book-open me-1"></i>Issue Book</Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/admin/manage_students")}`} to="/admin/manage_students">
+                <i className="fa-solid fa-users me-1"></i>Students</Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/admin/change_password")}`} to="/admin/change_password">
+                <i className="fa-solid fa-key me-1"></i>Change Password</Link>
+            </li>
+
+            <li className="nav-item">
+              <button className='btn btn-outline-danger' to="/admin/dashboard" onClick={handleLogout}>
+                <i className="fa-solid fa-right-from-bracket me-1"></i>Logout</button>
+            </li>
+
+            
+          </>
+        )}
+
+        {studentUser && (
+          <>
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/user/dashboard")}`} to="/user/dashboard">
+                <i className="fa-solid fa-gauge me-1"></i>Dashboard</Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/user/books")}`} to="/user/books">
+                <i className="fa-solid fa-book-open me-1"></i>My Library</Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive("/user/issued_books")}`} to="/user/issued_books">
+                <i className="fa-solid fa-receipt me-1"></i>Issued Books</Link>
+            </li>
+
+            <li className="nav-item dropdown">
+             <button className='nav-link dropdown-toggle btn btn-link' data-bs-toggle="dropdown">
+              <i className="fa-solid fa-circle-user me-1"></i>My Account
+             </button>
+                <ul className='dropdown-menu dropdown-menu-end'>
+                  <li>
+                      <Link className='dropdown-item' to="/user/profile">
+                      <i className="fa-solid fa-id-badge me-1"></i>Profile</Link>
+                  </li>
+                  <li>
+                      <Link className='dropdown-item' to="/user/change_password">
+                      <i className="fa-solid fa-key me-1"></i>Change Password</Link>
+                  </li>
+
+                  <hr className="dropdown-divider"/>
+                  <li>
+                      <button type="button" className='dropdown-item text-danger' onClick={handleStudentLogout}>
+                      <i className="fa-solid fa-right-from-bracket me-1"></i>Logout</button>
+                  </li>
+
+                </ul>
+            </li>
+
+          </>
+        )}
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+  )
+}
+
+export default Header
