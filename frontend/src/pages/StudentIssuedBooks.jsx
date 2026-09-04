@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -17,10 +17,9 @@ const StudentIssuedBooks = () => {
       }
 
         const fetchIssuedBooks = async () => {
-            setLoading(true);     //api call start hone wala h
+            setLoading(true);
             try {
-                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user_issued_books/", {params: {student_id: studentUser.student_id}});
-                //https://1227.0.0.1:8000/api/user_issued_books/?student_id=1
+                const res = await api.get("/api/user_issued_books/");
                 setIssuedBooks(res.data);
             } catch (err) {
                 console.error(err);

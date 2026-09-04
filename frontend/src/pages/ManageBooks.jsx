@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -36,9 +36,9 @@ const ManageBooks = () => {
       setLoadingList(true);
       try {
         const [booksRes, categoriesRes, authorsRes] = await Promise.all([
-          axios.get("https://library-management-system-efu0.onrender.com/api/books/"),
-          axios.get("https://library-management-system-efu0.onrender.com/api/categories/"),
-          axios.get("https://library-management-system-efu0.onrender.com/api/authors/")
+          api.get("/api/books/"),
+          api.get("/api/categories/"),
+          api.get("/api/authors/")
         ]);
         setBooks(booksRes.data);
         setCategories(categoriesRes.data);
@@ -98,7 +98,7 @@ const ManageBooks = () => {
           formData.append("cover_image", editImageFile);
         }
         
-        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_book/${editId}/`, 
+        const res = await api.put(`/api/update_book/${editId}/`, 
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }
@@ -134,7 +134,7 @@ const ManageBooks = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_book/${id}/`);
+        const res = await api.delete(`/api/delete_book/${id}/`);
           
        
         if (res.data.success) {

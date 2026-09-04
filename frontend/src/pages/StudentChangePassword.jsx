@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const StudentChangePassword = () => {
         return;
       }
 
-    },[]);  //empty dependency array means this effect runs only once when the component mounts
+    },[]);
 
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -43,8 +43,8 @@ const StudentChangePassword = () => {
 
       try {
         setSaving(true);
-        const res = await axios.post('https://library-management-system-efu0.onrender.com/api/user/change_password/', {
-          student_id: studentUser.student_id,
+       
+        const res = await api.post('/api/user/change_password/', {
           current_password: form.current_password,
           new_password: form.new_password,
           confirm_password: form.confirm_password

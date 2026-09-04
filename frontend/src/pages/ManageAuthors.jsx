@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ const ManageAuthors = () => {
     const fetchAuthors = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/authors/"); 
+        const res = await api.get("/api/authors/"); 
         setAuthors(res.data);
       }
       catch(err){
@@ -52,7 +52,7 @@ const ManageAuthors = () => {
       setSaving(true);
 
       try{
-        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_author/${editId}/`, 
+        const res = await api.put(`/api/update_author/${editId}/`, 
           {name:editName }
         );
         if (res.data.success) {
@@ -85,7 +85,7 @@ const ManageAuthors = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_author/${id}/`);
+        const res = await api.delete(`/api/delete_author/${id}/`);
           
        
         if (res.data.success) {

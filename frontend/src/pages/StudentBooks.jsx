@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";  
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -22,9 +22,10 @@ const StudentBooks = () => {
       }
 
         const fetchBooks = async () => {
-            setLoading(true);     //api call start hone wala h
+            setLoading(true);
             try {
-                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user/books/");
+             
+                const res = await api.get("/api/user/books/");
                 setBooks(res.data.books);
                 setFiltered(res.data.books);
             } catch (err) {
@@ -62,7 +63,7 @@ const StudentBooks = () => {
       if(book.cover_image.startsWith("http://")){
         return book.cover_image;
       }
-      return `https://library-management-system-efu0.onrender.com${book.cover_image}`;
+      return `https://library-management-system-efu0.onrender.com${book.cover_image}`;  
   }
 
   return (

@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -16,12 +16,15 @@ const AdminLogin = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/admin/login/", 
+        
+        const res = await api.post("/api/admin/login/", 
           {username, password}
         );
         if (res.status === 200) {
           toast.success(res.data.message || "Login Successful")
           localStorage.setItem("adminUser", res.data.username);
+          localStorage.setItem("access_token", res.data.access);      
+          localStorage.setItem("refresh_token", res.data.refresh);    
           navigate("/admin/dashboard");
 
         }
@@ -43,7 +46,6 @@ const AdminLogin = () => {
         setLoading(false);
       }
     }
-
   return (
     <div className="py-5" style={{background:"linear-gradient(135deg,#f3f4ff,#fdfbff)", minHeight:"100vh"}}>
       <div className="container">

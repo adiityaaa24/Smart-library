@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -34,8 +34,8 @@ const AddBook = () => {
       setLoadingDropdowns(true);
       try {
         const [authRes, catRes] = await Promise.all([
-          axios.get("https://library-management-system-efu0.onrender.com/api/authors/"),
-          axios.get("https://library-management-system-efu0.onrender.com/api/categories/")
+          api.get("/api/authors/"),
+          api.get("/api/categories/")
         ]);
         const activeCats = (catRes.data).filter((c) => c.is_active);
         setCategories(activeCats);
@@ -68,7 +68,7 @@ const AddBook = () => {
 
       setLoading(true);
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/books/add/", 
+        const res = await api.post("/api/books/add/", 
           formData, { headers: { "Content-Type": "multipart/form-data", }  // Set the content type to multipart/form-data for file uploads // Default hota hai hata bhi sakte hai axios automatically set kar deta hai
         }); 
         if (res.data.success) {

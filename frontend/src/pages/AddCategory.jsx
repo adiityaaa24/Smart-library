@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const AddCategory = () => {
 
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/categories/"); 
+        const res = await api.get("/api/categories/"); 
         setCategories(res.data);
       }
       catch(err){
@@ -37,7 +37,7 @@ const AddCategory = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/categories/add/", 
+        const res = await api.post("/api/categories/add/", 
           {name, status }
         );
         if (res.data.success) {

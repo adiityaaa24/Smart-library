@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ const IssueBook = () => {
     setStudentLoading(true);
 
     try {
-      const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/students/by-id/?student_id=${studentId}`);
+      const res = await api.get(`/api/students/by-id/?student_id=${studentId}`);
       setStudent(res.data.student);
     } catch (error) {
       toast.error("Student not found.");
@@ -48,7 +48,7 @@ const IssueBook = () => {
     setBookLoading(true);
 
     try {
-      const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/books/lookup/?q=${bookQuery}`);
+      const res = await api.get(`/api/books/lookup/?q=${bookQuery}`);
       setBook(res.data.book);
     } catch (error) {
       toast.error("Book not found.");
@@ -72,7 +72,7 @@ const IssueBook = () => {
     setIssuing(true);
 
     try {
-      const res = await axios.post("https://library-management-system-efu0.onrender.com/api/issue_book/", {
+      const res = await api.post("/api/issue_book/", {
         student_id: student.student_id,
         book_id: book.id,
         remark: remark

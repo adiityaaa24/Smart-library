@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";  
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -25,7 +25,8 @@ const StudentHistory = () => {
     const fetchHistory = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/admin/student_history/${studentId}/`);
+        
+        const res = await api.get(`/api/admin/student_history/${studentId}/`);
         setStudent(res.data.student);
         setIssues(res.data.issues);
       }

@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ const IssuedBookDetails = () => {
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`https://library-management-system-efu0.onrender.com/api/issued_books/${id}/`);
+        const res = await api.get(`/api/issued_books/${id}/`);
         setIssue(res.data);
         if(res.data.fine){
           setFine(res.data.fine);
@@ -55,7 +55,7 @@ const IssuedBookDetails = () => {
 
       setReturning(true);
       try {
-        const res = await axios.post(`https://library-management-system-efu0.onrender.com/api/return_book/${id}/`, {fine: fine});
+        const res = await api.post(`/api/return_book/${id}/`, {fine: fine});
         toast.success("Book returned successfully");
         //navigate("/admin/manage_issued_books");
         fetchDetails(); // Refresh the details after returning the book

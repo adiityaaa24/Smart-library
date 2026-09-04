@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const AddAuthor = () => {
 
     const fetchAuthors = async () => {
       try {
-        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/authors/"); 
+        const res = await api.get("/api/authors/"); 
         setAuthors(res.data);
       }
       catch(err){
@@ -36,7 +36,7 @@ const AddAuthor = () => {
       setLoading(true);
 
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/authors/add/", 
+        const res = await api.post("/api/authors/add/", 
           { name }
         ); 
         if (res.data.success) {

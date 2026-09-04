@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -10,14 +10,12 @@ const StudentProfile = () => {
     mobile: "",
     email: "",
   });
-    
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const navigate = useNavigate();
 
     const studentUser = JSON.parse(localStorage.getItem("studentUser"));
-
 
     useEffect(() => {
       if(!studentUser){
@@ -26,12 +24,10 @@ const StudentProfile = () => {
       }
 
         const fetchProfile = async () => {
-            setLoading(true);     //api call start hone wala h
+            setLoading(true);
             try {
-                const res = await axios.get('https://library-management-system-efu0.onrender.com/api/user/profile/', {
-                  params: {student_id: studentUser.student_id}
-                  //https://127.0.0.1:8000/api/user/profile/?student_id=1001
-                });
+               
+                const res = await api.get('/api/user/profile/');
                 setProfile({
                   student_id: res.data.student_id,
                   full_name: res.data.full_name,
@@ -47,7 +43,7 @@ const StudentProfile = () => {
         };
 
         fetchProfile();
-    },[]);  //empty dependency array means this effect runs only once when the component mounts
+    },[]);
 
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -61,23 +57,16 @@ const StudentProfile = () => {
       e.preventDefault();
       try {
         setSaving(true);
-        const res = await axios.put('https://library-management-system-efu0.onrender.com/api/user/profile/', {
-          student_id: profile.student_id,
-          
-          //student_id: studentUser.student_id, // Use the student_id from localStorage
-          
+        
+        const res = await api.put('/api/user/profile/', {
           full_name: profile.full_name,
           mobile: profile.mobile,
-          
-          //email: profile.email
         });
         toast.success("Profile updated successfully.");
 
-        // Update the localStorage with the new profile data
         const updatedUser = {
           ...studentUser,
           full_name: profile.full_name,
-          
         };
         localStorage.setItem("studentUser", JSON.stringify(updatedUser));
       } catch (err) {

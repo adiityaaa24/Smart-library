@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -24,10 +24,10 @@ const StudentDashboard = () => {
       }
 
         const fetchStats = async () => {
-            setLoading(true);     //api call start hone wala h
+            setLoading(true);
             try {
-                const res = await axios.get("https://library-management-system-efu0.onrender.com/api/user_stats/", {params: {student_id: studentUser.student_id}});
-                //https://1227.0.0.1:8000/api/user_stats/?student_id=1
+                
+                const res = await api.get("/api/user_stats/");
                 setStats(res.data.stats);
             } catch (err) {
                 console.error(err);
@@ -38,7 +38,7 @@ const StudentDashboard = () => {
         };
 
         fetchStats();
-    }, []); //empty dependency array means this effect runs only once when the component mounts
+    }, []);
    
   return (
     <div className="py-5" style={{background:"linear-gradient(135deg,#f3f4ff,#fdfbff)", minHeight:"100vh"}}>

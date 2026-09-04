@@ -11,10 +11,19 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
+
+
 # Create your views here.
 
 
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
+from .permissions import IsAdmin, IsStudent
+
+
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def admin_login_api(request):
     username = request.data.get("username")
     password = request.data.get("password")
@@ -22,27 +31,31 @@ def admin_login_api(request):
     user = authenticate(username=username, password=password)
 
     if user is not None and user.is_staff:
+        refresh = RefreshToken.for_user(user)
+        refresh["role"] = "admin"
+        access = refresh.access_token
+
         return Response(
             {
-                "success" : True,
-                "message" : "Login Successful",
-                "username" : username,
+                "success": True,
+                "message": "Login Successful",
+                "username": username,
+                "access": str(access),
+                "refresh": str(refresh),
             },
-            status = 200
+            status=200,
         )
     else:
         return Response(
-            {
-                "success" : False,
-                "message" : "Invalid Credentials",
-            },
-            status = 401
+            {"success": False, "message": "Invalid Credentials"},
+            status=401,
         )
 
 from rest_framework import status
 
 
 @api_view(["POST"])
+@permission_classes([IsAdmin])
 def add_category(request):
     name = request.data.get("name")
     category_status = request.data.get("status", "1")
@@ -64,6 +77,7 @@ def add_category(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def list_categories(request):
     categories = Category.objects.all().order_by("-id")
 
@@ -76,6 +90,7 @@ def list_categories(request):
 from django.shortcuts import get_object_or_404  
 
 @api_view(["PUT"])
+@permission_classes([IsAdmin])
 def update_category(request, id):
     category = get_object_or_404(Category, id=id)
 
@@ -102,6 +117,7 @@ def update_category(request, id):
 
 
 @api_view(["DELETE"])
+@permission_classes([IsAdmin])
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)
 
@@ -118,6 +134,7 @@ def delete_category(request, id):
 
 
 @api_view(["POST"])
+@permission_classes([IsAdmin])
 def add_author(request):
     name = request.data.get("name")
     
@@ -137,6 +154,7 @@ def add_author(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def list_authors(request):
     authors = Author.objects.all().order_by("-id")
 
@@ -147,6 +165,7 @@ def list_authors(request):
 
 
 @api_view(["PUT"])
+@permission_classes([IsAdmin])
 def update_author(request, id):
     author = get_object_or_404(Author, id=id)
     name = request.data.get("name")
@@ -167,6 +186,7 @@ def update_author(request, id):
 
 
 @api_view(["DELETE"])
+@permission_classes([IsAdmin])
 def delete_author(request, id):
     author = get_object_or_404(Author, id=id)
     author.delete()
@@ -181,6 +201,7 @@ def delete_author(request, id):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def list_books(request):
     books = Book.objects.all().order_by("-id")
 
@@ -195,6 +216,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])
+@permission_classes([IsAdmin])
 def add_book(request):
     title = request.data.get("title")
     author_id = request.data.get("author")
@@ -239,6 +261,7 @@ def add_book(request):
 
 @api_view(["PUT"])
 @parser_classes([MultiPartParser, FormParser])
+@permission_classes([IsAdmin])
 def update_book(request, id):
     book = get_object_or_404(Book, id=id)
 
@@ -277,6 +300,7 @@ def update_book(request, id):
 
 
 @api_view(["DELETE"])
+@permission_classes([IsAdmin])
 def delete_book(request, id):
     book = get_object_or_404(Book, id=id)
     book.delete()
@@ -293,6 +317,7 @@ def delete_book(request, id):
 from django.contrib.auth.models import User
 
 @api_view(["POST"])
+@permission_classes([IsAdmin])
 def admin_change_password(request):
     username = request.data.get("username")
     current_password = request.data.get("current_password")
@@ -357,6 +382,7 @@ from django.contrib.auth.hashers import make_password  #for hashing passwords
 from django.db.models import Q # for complex queries like OR conditions
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def user_signup(request):
     full_name = request.data.get("full_name")
     mobile = request.data.get("mobile")
@@ -438,46 +464,25 @@ def user_signup(request):
 from django.contrib.auth.hashers import check_password
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def user_login(request):
     login_id = request.data.get("login_id")
     password = request.data.get("password")
 
     try:
-        # if "@" in login_id:
-        #     student = Student.objects.get(email=login_id)
-        # else:
-        #     student = Student.objects.get(student_id=login_id)
-
         student = Student.objects.get(models.Q(email=login_id) | models.Q(student_id=login_id))
-
     except Student.DoesNotExist:
-        return Response(
-            {
-                "success": False,
-                "message": "Invalid email or student ID",
-            },
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-
+        return Response({"success": False, "message": "Invalid email or student ID"}, status=401)
 
     if not check_password(password, student.password):
-        return Response(
-            {
-                "success": False,
-                "message": "Incorrect password",
-            },
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-    
+        return Response({"success": False, "message": "Incorrect password"}, status=401)
 
     if not student.is_active:
-        return Response(
-            {
-                "success": False,
-                "message": "Your account is inactive. Please contact the administrator.",
-            },
-            status=status.HTTP_403_FORBIDDEN,
-        )
+        return Response({"success": False, "message": "Your account is inactive."}, status=403)
+
+    refresh = RefreshToken.for_user(student)
+    refresh["role"] = "student"
+    access = refresh.access_token
 
     return Response(
         {
@@ -486,26 +491,16 @@ def user_login(request):
             "student_id": student.student_id,
             "full_name": student.full_name,
             "email": student.email,
+            "access": str(access),
+            "refresh": str(refresh),
         },
-        status=status.HTTP_200_OK,
+        status=200,
     )
 
-
 @api_view(["GET"])
+@permission_classes([IsStudent])
 def user_stats(request):
-    student_id = request.query_params.get("student_id")
-      #student_id = request.GET.get("student_id")  # Get the student_id from query parameters (django ka trika upar wala drf ka)
-
-    try:
-        student = Student.objects.get(student_id=student_id)
-    except Student.DoesNotExist:
-        return Response(
-            {
-                "success": False,
-                "message": "Student not found",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
+    student = request.user   # <-- token se aaya hua actual logged-in student
 
     total_books = Book.objects.count()
     total_issued = IssuedBook.objects.filter(student=student).count()
@@ -516,18 +511,12 @@ def user_stats(request):
         "total_issued": total_issued,
         "not_returned": not_returned,
     }
-
-    return Response(
-        {
-            "success": True,
-            "stats": stats,
-        },
-        status=status.HTTP_200_OK,
-    )
+    return Response({"success": True, "stats": stats}, status=status.HTTP_200_OK)
 
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def user_list_books(request):
     books = Book.objects.select_related('category', 'author').prefetch_related('issued_records').all().order_by("title")
     serializer = BookListSerializer(books, many=True)
@@ -541,38 +530,27 @@ def user_list_books(request):
 
 
 @api_view(["GET", "PUT"])
+@permission_classes([IsStudent])
 def user_profile(request):
-    student_id = request.query_params.get("student_id") or request.data.get("student_id")  # Get the student_id from query parameters or request data
-
-    try:
-        student = Student.objects.get(student_id=student_id)
-    except Student.DoesNotExist:
-        return Response(
-            {
-                "success": False,
-                "message": "Student not found",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
+    student = request.user   # JWT token se aaya hua logged-in student
 
     if request.method == "GET":
         serializer = StudentSerializer(student)
-        return Response(serializer.data, status=status.HTTP_200_OK
-        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     elif request.method == "PUT":
         serializer = StudentSerializer(student, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
+@permission_classes([IsStudent])
 def user_change_password(request):
-    student_id = request.data.get("student_id")
+    student = request.user   # JWT token se aaya hua logged-in student
+
     current_password = request.data.get("current_password")
     new_password = request.data.get("new_password")
     confirm_password = request.data.get("confirm_password")
@@ -595,17 +573,6 @@ def user_change_password(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    try:
-        student = Student.objects.get(student_id=student_id)
-    except Student.DoesNotExist:
-        return Response(
-            {
-                "success": False,
-                "message": "Student not found",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
-
     if not check_password(current_password, student.password):
         return Response(
             {
@@ -615,7 +582,7 @@ def user_change_password(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    student.password = make_password(new_password)  # Hash the new password before saving
+    student.password = make_password(new_password)
     student.save()
 
     return Response(
@@ -629,6 +596,7 @@ def user_change_password(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def list_registered_students(request):
     students = Student.objects.all().order_by("-id")
     serializer = StudentSerializer(students, many=True)
@@ -636,6 +604,7 @@ def list_registered_students(request):
 
 
 @api_view(["PUT"])
+@permission_classes([IsAdmin])
 def block_student(request, id):
     student = get_object_or_404(Student, id=id)
     student.is_active = False
@@ -651,6 +620,7 @@ def block_student(request, id):
 
 
 @api_view(["PUT"])
+@permission_classes([IsAdmin])
 def activate_student(request, id):
     student = get_object_or_404(Student, id=id)
     student.is_active = True
@@ -666,6 +636,7 @@ def activate_student(request, id):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def get_student_by_student_id(request):
     student_id = request.query_params.get("student_id") or request.data.get("student_id")  # Get the student_id from query parameters or request data
 
@@ -685,6 +656,7 @@ def get_student_by_student_id(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def lookup_book_for_issue(request):
     query = request.query_params.get("q")
     try:
@@ -704,6 +676,7 @@ def lookup_book_for_issue(request):
 
 
 @api_view(["POST"])
+@permission_classes([IsAdmin])
 def issue_book(request):
     student_id = request.data.get("student_id")
     book_id = request.data.get("book_id")
@@ -768,6 +741,7 @@ def issue_book(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def list_issued_books(request):
     issued_books = IssuedBook.objects.select_related('student', 'book').all().order_by("-id")
     serializer = IssuedBookSerializer(issued_books, many=True)
@@ -778,6 +752,7 @@ def list_issued_books(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def get_issued_book_details(request, id):
     issued_book = get_object_or_404(IssuedBook, id=id)
     serializer = IssuedBookSerializer(issued_book)
@@ -786,6 +761,7 @@ def get_issued_book_details(request, id):
 
 from django.utils import timezone
 @api_view(["POST"])
+@permission_classes([IsAdmin])
 def return_book(request, id):
     issued_book = get_object_or_404(IssuedBook, id=id)
 
@@ -834,6 +810,7 @@ def return_book(request, id):
 #.filter(student__student_id=student_id) filter by model
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def student_issue_history(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     issued_books = IssuedBook.objects.filter(student=student).select_related('student', 'book').order_by("-id")
@@ -852,6 +829,7 @@ def student_issue_history(request, student_id):
 
 
 @api_view(["GET"])
+@permission_classes([IsAdmin])
 def admin_dashboard_stats(request):
     # total_students = student.objects.all().count()  by default all rehta h
     total_students = Student.objects.count()
@@ -895,24 +873,31 @@ def admin_dashboard_stats(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsStudent])
 def user_issued_books(request):
-    student_id = request.query_params.get("student_id")
-
-    try:
-        student = Student.objects.get(student_id=student_id)
-    except Student.DoesNotExist:
-        return Response(
-            {
-                "success": False,
-                "message": "Student not found",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
+    student = request.user   # JWT token se aaya hua logged-in student
 
     issued_books = IssuedBook.objects.filter(student=student).select_related('book', 'student').order_by("-id")
     serializer = IssuedBookSerializer(issued_books, many=True)
 
     return Response(
         serializer.data,
-        status=status.HTTP_200_OK
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def public_stats(request):
+    total_books = Book.objects.count()
+    total_students = Student.objects.count()
+    total_categories = Category.objects.count()
+
+    return Response(
+        {
+            "total_books": total_books,
+            "total_students": total_students,
+            "total_categories": total_categories,
+        },
+        status=status.HTTP_200_OK,
     )

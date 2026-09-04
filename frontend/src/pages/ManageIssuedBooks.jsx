@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const ManageIssuedBooks = () => {
     const fetchIssues = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/admin/issued_books/");
+        const res = await api.get("/api/admin/issued_books/");
         setIssues(res.data);
       }
       catch(err){

@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ const ManageCategories = () => {
     const fetchCategories = async () => {
       setLoadingList(true);
       try {
-        const res = await axios.get("https://library-management-system-efu0.onrender.com/api/categories/"); 
+        const res = await api.get("/api/categories/"); 
         setCategories(res.data);
       }
       catch(err){
@@ -54,7 +54,7 @@ const ManageCategories = () => {
       setSaving(true);
 
       try{
-        const res = await axios.put(`https://library-management-system-efu0.onrender.com/api/update_category/${editId}/`, 
+        const res = await api.put(`/api/update_category/${editId}/`, 
           {name:editName, status:editStatus }
         );
         if (res.data.success) {
@@ -87,7 +87,7 @@ const ManageCategories = () => {
       if(!ok)   return;
 
       try{
-        const res = await axios.delete(`https://library-management-system-efu0.onrender.com/api/delete_category/${id}/`);
+        const res = await api.delete(`/api/delete_category/${id}/`);
           
        
         if (res.data.success) {

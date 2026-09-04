@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -15,25 +15,28 @@ const UserLogin = () => {
 
     const handleChange = (e) => {
         setFormData({
-            ...formData,    //spread the existing formData object to preserve its current values bas email change kar rahe toh baki me change nahi hoga ex mobile data as it is rhega
-            [e.target.name]: e.target.value //update specific field
+            ...formData,
+            [e.target.name]: e.target.value
         });
     }
 
     const handleSubmit = async(e) => {
-      e.preventDefault();     //prevent default form submission behavior
+      e.preventDefault();
       
-      setLoading(true);       //set loading state to true to indicate that the form submission is in progress
+      setLoading(true);
 
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/user_login/", formData
-        ); 
+       
+        const res = await api.post("/api/user_login/", formData); 
         
         if (res.data.success) {
-          localStorage.setItem("studentUser", JSON.stringify(res.data)); // Store the entire user data in localStorage
+          localStorage.setItem("studentUser", JSON.stringify(res.data));
+          localStorage.setItem("access_token", res.data.access);
+          localStorage.setItem("refresh_token", res.data.refresh);
+
 
           toast.success(`Login successful! Welcome ${res.data.full_name}`);
-          navigate("/user/dashboard"); // Redirect to the user dashboard after successful login
+          navigate("/user/dashboard");
 
           setFormData({
             login_id: "",

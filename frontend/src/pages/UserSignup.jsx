@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import axios from "axios";
+import api from "../api";   
 import { toast } from "react-toastify";
 import { Link } from 'react-router-dom';
 
@@ -16,13 +16,13 @@ const UserSignup = () => {
 
     const handleChange = (e) => {
         setFormData({
-            ...formData,    //spread the existing formData object to preserve its current values bas email change kar rahe toh baki me change nahi hoga ex mobile data as it is rhega
-            [e.target.name]: e.target.value //update specific field
+            ...formData,
+            [e.target.name]: e.target.value
         });
     }
 
     const handleSubmit = async(e) => {
-      e.preventDefault();     //prevent default form submission behavior
+      e.preventDefault();
 
       if (formData.password !== formData.confirmPassword) { 
         toast.error("password and confirm password do not match");
@@ -34,20 +34,11 @@ const UserSignup = () => {
         return;
       }
       
-      setLoading(true);       //set loading state to true to indicate that the form submission is in progress
+      setLoading(true);
 
       try{
-        const res = await axios.post("https://library-management-system-efu0.onrender.com/api/user_signup/", formData
-          // { 
-          //   // full_name: formData.full_name, 
-          //   // mobile: formData.mobile, 
-          //   // email: formData.email, 
-          //   // password: formData.password, 
-          //   // confirm_password: formData.confirmPassword 
-
-          //   
-          // }
-        ); 
+       
+        const res = await api.post("/api/user_signup/", formData); 
         if (res.data.success) {
           toast.success(`Registration successful! Your Student ID is 
             ${res.data.student_id}`);
