@@ -60,7 +60,7 @@ const StudentBooks = () => {
       if(!book.cover_image){
         return null
       }
-      if(book.cover_image.startsWith("http://")){
+      if(book.cover_image.startsWith("http")){
         return book.cover_image;
       }
       return `https://library-management-system-efu0.onrender.com${book.cover_image}`;  
