@@ -53,6 +53,13 @@ const ManageBooks = () => {
       }
     }
 
+    const getCoverUrl = (coverImage) => {
+      if (!coverImage) return null;
+      return coverImage.startsWith("http") 
+        ? coverImage 
+        : `https://library-management-system-efu0.onrender.com${coverImage}`;
+    };
+
     const startEdit = (book) => {
       setEditId(book.id);
       setEditTitle(book.title);
@@ -60,7 +67,7 @@ const ManageBooks = () => {
       setEditAuthor(book.author);
       setEditPrice(book.price);
       setEditQuantity(book.quantity);
-      setEditImagePreview(`https://library-management-system-efu0.onrender.com${book.cover_image}`);
+      setEditImagePreview(getCoverUrl(book.cover_image));
       setEditImageFile(null);
     }
 
@@ -338,7 +345,7 @@ const ManageBooks = () => {
                               <td>{index+1}</td>
                               <td style={{maxWidth:"200px"}}>
                                 
-                                <img src={`https://library-management-system-efu0.onrender.com${book.cover_image}`} alt={book.title} className='img-fluid rounded' style={{maxHeight: "100px", height: "70px", marginBottom: "4px"}}/>
+                                <img src={getCoverUrl(book.cover_image)} alt={book.title} className='img-fluid rounded' style={{maxHeight: "100px", height: "70px", marginBottom: "4px"}}/>
 
                                 <div className='fw-bold small'>{book.title}</div>
 

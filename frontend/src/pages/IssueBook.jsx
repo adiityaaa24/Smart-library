@@ -92,7 +92,7 @@ const IssueBook = () => {
   };
 
   const getBookCoverUrl = book && book.cover_image ? 
-    (book.cover_image.startsWith("http://") ? book.cover_image : `https://library-management-system-efu0.onrender.com${book.cover_image}`)
+    (book.cover_image.startsWith("http") ? book.cover_image : `https://library-management-system-efu0.onrender.com${book.cover_image}`)
     : null;
 
 

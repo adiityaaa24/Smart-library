@@ -70,7 +70,7 @@ const IssuedBookDetails = () => {
     }
 
     const bookCoverUrl = issue && issue.book_cover ? 
-    (issue.book_cover.startsWith("http://") ? issue.book_cover : `https://library-management-system-efu0.onrender.com${issue.book_cover}`)
+    (issue.book_cover.startsWith("http") ? issue.book_cover : `https://library-management-system-efu0.onrender.com${issue.book_cover}`)
     : null;
 
 
