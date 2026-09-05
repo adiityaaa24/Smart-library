@@ -51,4 +51,5 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view()),
     path("api/public_stats/", public_stats),
 
+    path("api/debug_cloudinary/", debug_cloudinary),
 ]

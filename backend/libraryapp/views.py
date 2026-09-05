@@ -901,3 +901,18 @@ def public_stats(request):
         },
         status=status.HTTP_200_OK,
     )
+
+
+from django.conf import settings
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def debug_cloudinary(request):
+    storage = settings.DEFAULT_FILE_STORAGE
+    cloud_name = settings.CLOUDINARY_STORAGE.get('CLOUD_NAME')
+    
+    return Response({
+        "storage_backend": storage,
+        "cloud_name_set": bool(cloud_name),
+        "cloud_name_length": len(cloud_name) if cloud_name else 0,
+    })
