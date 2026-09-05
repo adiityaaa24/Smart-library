@@ -1,27 +1,29 @@
-# Library Management System 📚
+# 📚 Smart Library
 
-A full-stack **Library Management System** built with **React** and **Django REST Framework**. The application provides separate workflows for administrators and students to manage books, authors, categories, issuing records, and student accounts.
+A full-stack **Library Management System** built with **React** and **Django REST Framework**. The application provides separate, secure workflows for administrators and students to manage books, authors, categories, issuing records, and student accounts — with JWT-based authentication and role-based authorization.
+
+🔗 **Live Demo:** [frontend-aditya-a6cf.vercel.app](https://frontend-aditya-a6cf.vercel.app)
 
 ## Features
 
 ### 👨‍💼 Admin
 
-* 🔐 Admin authentication
-* 📊 Admin dashboard
-* 📚 Add, update, and manage books
+* 🔐 Secure JWT-based admin authentication
+* 📊 Admin dashboard with live statistics
+* 📚 Add, update, and manage books (with cover images)
 * ✍️ Manage authors
 * 🏷️ Manage book categories
 * 📖 Issue books to students
-* 📋 Manage issued books
-* 👨‍🎓 Manage student accounts
+* 📋 Manage and track issued/returned books
+* 👨‍🎓 Manage student accounts (block/activate)
 * 🔑 Change admin password
 
 ### 👨‍🎓 Student
 
-* 📝 Student registration and login
-* 📚 Browse available books
-* 📖 View issued books
-* 🕐 View borrowing history
+* 📝 Student registration and secure login
+* 📚 Browse available books with live availability
+* 📖 View currently issued books
+* 🕐 View complete borrowing history
 * 👤 View and manage profile
 * 🔑 Change password
 
@@ -29,21 +31,27 @@ A full-stack **Library Management System** built with **React** and **Django RES
 
 ### Frontend
 
-* **React**
+* **React** (Vite)
 * **JavaScript**
-* **Vite**
-* **CSS**
+* **Bootstrap / CSS**
+* **Axios**
 
 ### Backend
 
 * **Python**
-* **Django**
-* **Django REST Framework**
+* **Django** & **Django REST Framework**
+* **Simple JWT** — token-based authentication
 * **django-cors-headers**
 
-### Database
+### Database & Storage
 
-* **SQLite** for local development
+* **PostgreSQL** (production)
+* **Cloudinary** — cloud storage for book cover images
+
+### Deployment
+
+* **Render** — backend hosting
+* **Vercel** — frontend hosting
 
 ### Other
 
@@ -58,19 +66,27 @@ A full-stack **Library Management System** built with **React** and **Django RES
                     │      (Vite)         │
                     └──────────┬──────────┘
                                │
-                               │ HTTP / REST API
+                               │ HTTPS / REST API (JWT Auth)
                                ▼
                     ┌─────────────────────┐
                     │    Django Backend   │
                     │ Django REST Framework│
                     └──────────┬──────────┘
                                │
-                               ▼
-                    ┌─────────────────────┐
-                    │       SQLite        │
-                    │      Database       │
-                    └─────────────────────┘
+                  ┌────────────┴────────────┐
+                  ▼                          ▼
+        ┌─────────────────┐       ┌─────────────────┐
+        │   PostgreSQL     │       │    Cloudinary    │
+        │    Database      │       │  (Media Storage) │
+        └─────────────────┘       └─────────────────┘
 ```
+
+## Security
+
+* **JWT Authentication** — access & refresh tokens issued on login
+* **Role-based Authorization** — separate `IsAdmin` / `IsStudent` permission classes protecting every endpoint
+* **Password Hashing** — Django's built-in password hashers, no plaintext storage
+* **Environment-based Secrets** — database credentials, API keys, and secret keys managed via environment variables, never hardcoded
 
 ## Project Structure
 
@@ -88,6 +104,8 @@ library-management-system/
 │   │   ├── migrations/
 │   │   ├── models.py
 │   │   ├── serializers.py
+│   │   ├── authentication.py
+│   │   ├── permissions.py
 │   │   ├── views.py
 │   │   └── urls.py
 │   │
@@ -96,8 +114,8 @@ library-management-system/
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/
 │   │   ├── pages/
+│   │   ├── api.js
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   │
@@ -111,113 +129,75 @@ library-management-system/
 
 ### Backend Setup
 
-Navigate to the backend directory:
-
 ```bash
 cd backend
-```
-
-Create a virtual environment:
-
-```bash
 python -m venv venv
-```
-
-Activate it on Windows:
-
-```powershell
-venv\Scripts\activate
-```
-
-Install the required dependencies:
-
-```bash
+venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-```
-
-Run database migrations:
-
-```bash
 python manage.py migrate
-```
-
-Start the Django development server:
-
-```bash
 python manage.py runserver
 ```
 
-The backend will run at:
-
-```text
-http://127.0.0.1:8000/
-```
+Backend runs at `http://127.0.0.1:8000/`
 
 ### Frontend Setup
 
-Open another terminal and navigate to the frontend:
-
 ```bash
 cd frontend
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Start the Vite development server:
-
-```bash
 npm run dev
 ```
 
-The frontend will be available at the local URL provided by Vite.
+Frontend runs at the local URL provided by Vite.
 
-## API
+### Environment Variables
 
-The React frontend communicates with the Django backend through REST APIs.
+Backend expects the following environment variables in production:
 
-The backend handles operations such as:
+SECRET_KEY=
+DEBUG=False
+DATABASE_URL=
+FRONTEND_URL=
+ADMIN_USERNAME=
+ADMIN_PASSWORD=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
-* User authentication
-* Book management
-* Author management
-* Category management
-* Book issuing
-* Student records
-* Borrowing history
 
-## Key Concepts
 
-This project demonstrates practical implementation of:
 
-* React component-based architecture
-* React state management
-* REST API integration
-* Django REST Framework
-* CRUD operations
-* Authentication workflows
-* Relational data modelling
-* API request handling
-* Frontend/backend separation
-* CORS configuration
-* Git-based project management
+## API Overview
+
+The React frontend communicates with the Django backend through a REST API secured with JWT. The backend handles:
+
+* Authentication (student & admin, separately)
+* Book, author, and category management
+* Book issuing and returns
+* Student records and borrowing history
+* Public statistics (books/students/categories count)
+
+## Key Concepts Demonstrated
+
+* React component-based architecture & state management
+* JWT authentication with custom role-based permission classes
+* REST API design with Django REST Framework
+* CRUD operations across relational data models
+* Cloud storage integration (Cloudinary) for media handling
+* PostgreSQL in production with environment-based configuration
+* CORS configuration across separately deployed frontend/backend
+* Full deployment pipeline (Render + Vercel) with CI-style auto-deploy on push
 
 ## Future Improvements
 
-* ☁️ Deploy frontend and backend
-* 🐘 Migrate production database from SQLite to PostgreSQL
-* 🔐 Implement token-based authentication
-* 📱 Improve mobile responsiveness
-* 🔎 Add advanced book search and filtering
-* 📊 Add detailed analytics to the admin dashboard
-* 📧 Add email notifications for issued and overdue books
-* 🖼️ Improve image/media storage for production
+* 🧪 Automated backend tests (unit + integration)
+* 🔎 Advanced book search and filtering
+* 📊 More detailed analytics on the admin dashboard
+* 📧 Email notifications for issued and overdue books
+* 📱 Further mobile responsiveness improvements
 
 ## Author
 
 **Aditya Raj**
 
-A full-stack project built to practice React frontend development, Django REST API development, database operations, and frontend-backend integration.
+A full-stack project built to practice React frontend development, Django REST API development, secure authentication, cloud deployment, and production debugging.

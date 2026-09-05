@@ -8,42 +8,21 @@ const Home = () => {
   const [counts, setCounts] = useState({ books: 0, students: 0, categories: 0 });
 
   useEffect(() => {
-    const fetchAndAnimate = async () => {
-      let targets = { books: 0, students: 0, categories: 0 };
-
+    const fetchStats = async () => {
       try {
         const res = await api.get("/api/public_stats/");
-        targets = {
+        setCounts({
           books: res.data.total_books,
           students: res.data.total_students,
           categories: res.data.total_categories,
-        };
+        });
       } catch (err) {
         console.error("Failed to fetch stats", err);
         // fallback: agar API fail ho jaaye toh 0 hi dikhega, crash nahi hoga
       }
-
-      const duration = 1200;
-      const steps = 40;
-      const interval = duration / steps;
-
-      let step = 0;
-      const timer = setInterval(() => {
-        step++;
-        const progress = step / steps;
-        setCounts({
-          books: Math.floor(targets.books * progress),
-          students: Math.floor(targets.students * progress),
-          categories: Math.floor(targets.categories * progress),
-        });
-        if (step >= steps) {
-          clearInterval(timer);
-          setCounts(targets); // exact final value pe snap karo (rounding fix)
-        }
-      }, interval);
     };
 
-    fetchAndAnimate();
+    fetchStats();
   }, []);
 
   const studentUser = JSON.parse(localStorage.getItem("studentUser"));
@@ -190,7 +169,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Stats Section — ab REAL data */}
+        {/* Stats Section — real data, direct */}
         <div className="row g-4 mb-5 text-center">
           <div className="col-md-4">
             <div className="card border-0 shadow-sm rounded-4 py-4">
